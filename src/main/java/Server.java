@@ -24,6 +24,8 @@ public class Server {
         while (true) {
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
             serverSocket.receive(receivePacket);
+            String sentence = new String(receivePacket.getData());
+            System.out.println(sentence);
         }
     }
 
