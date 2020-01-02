@@ -27,7 +27,7 @@ public class Server {
     }
 
     private String tryDeHash(String startRange, String endRange, String originalHash) {
-        
+
         return null;
     }
 
