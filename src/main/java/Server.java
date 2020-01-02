@@ -12,9 +12,9 @@ public class Server {
         System.out.println(s.tryDeHash("aaaaa","zzzzz","9017347a610d1436c1aaf52764e6578e8fc1a083"));
     }
 
-    private String hash(String toHash, String nameOfHashAlgorithm) {
+    private String hash(String toHash) {
         try {
-            MessageDigest md = MessageDigest.getInstance(nameOfHashAlgorithm);
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
             byte[] messageDigest = md.digest(toHash.getBytes());
             BigInteger no = new BigInteger(1, messageDigest);
             StringBuilder hashText = new StringBuilder(no.toString(16));
@@ -33,7 +33,7 @@ public class Server {
         int length = startRange.length();
         for (int i = start; i <= end; i++) {
             String currentString = convertIntToString(i, length);
-            String hash = hash(currentString, "SHA-1");
+            String hash = hash(currentString);
             if (originalHash.equals(hash)) {
                 return currentString;
             }
