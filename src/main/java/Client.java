@@ -17,7 +17,7 @@ public class Client {
 
     public Client() {
         utils = new Utils();
-        teamName = "MatanAndOmer";
+        teamName = "MatanAndOmer____________________";
         ranges = new ArrayList<>();
     }
 

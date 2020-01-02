@@ -12,7 +12,7 @@ public class Server {
 
     public Server() throws SocketException {
         utils = new Utils();
-        teamName = "MatanAndOmer                    ";
+        teamName = "MatanAndOmer____________________";
         serverSocket = new DatagramSocket(3117);
     }
 

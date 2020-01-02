@@ -42,10 +42,10 @@ public class Message {
     public Message(String message) {
         this.teamName = message.substring(0, 32);
         this.messageType = Type.values()[Integer.parseInt(message.substring(32, 33))];
-        this.hashToCrack = message.substring(33, 74);
-        this.length = Integer.parseInt(message.substring(74, 75));
-        this.startRange = message.substring(75, 76+length);
-        this.endRange = message.substring(76+length, 77+2*length);
+        this.hashToCrack = message.substring(33, 73);
+        this.length = Integer.parseInt(message.substring(73, 74));
+        this.startRange = message.substring(74, 74+length);
+        this.endRange = message.substring(74+length, 74+2*length);
     }
 
     @Override
