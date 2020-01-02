@@ -2,6 +2,9 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import java.io.*;
+import java.net.*;
+
 public class Server {
     private Utils utils;
 
@@ -11,9 +14,25 @@ public class Server {
 
     public static void main(String[] args) {
         Server s = new Server();
-        System.out.println(s.tryDeHash("aaaaa", "zzzzz", "7f5bb03cf507c861269be561971108be8f37d832"));
-        System.out.println(s.tryDeHash("aaaaa", "zzzzz", "a346f3083515cbc8ca18aae24f331dee2d23454b"));
-        System.out.println(s.tryDeHash("aaaaa", "zzzzz", "9017347a610d1436c1aaf52764e6578e8fc1a083"));
+        try {
+            s.init();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void init() throws Exception {
+        String broadcastMessage = "Hello";
+        InetAddress address = InetAddress.getByName("255.255.255.255");
+        DatagramSocket socket = new DatagramSocket();
+        socket.setBroadcast(true);
+
+        byte[] buffer = broadcastMessage.getBytes();
+
+        DatagramPacket packet = new DatagramPacket(buffer,buffer.length,address,3711);
+        socket.send(packet);
+        socket.close();
+
     }
 
     private String hash(String toHash) {
