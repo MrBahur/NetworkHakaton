@@ -12,9 +12,19 @@ public class Server {
         utils = new Utils();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Server s = new Server();
+        s.listen();
 
+    }
+
+    private void listen() throws IOException {
+        DatagramSocket serverSocket = new DatagramSocket(3117);
+        byte[] receiveData = new byte[1024];
+        while (true) {
+            DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+            serverSocket.receive(receivePacket);
+        }
     }
 
     private String hash(String toHash) {
