@@ -14,24 +14,6 @@ public class Server {
 
     public static void main(String[] args) {
         Server s = new Server();
-        try {
-            s.init();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void init() throws Exception {
-        String broadcastMessage = "Hello";
-        InetAddress address = InetAddress.getByName("255.255.255.255");
-        DatagramSocket socket = new DatagramSocket();
-        socket.setBroadcast(true);
-
-        byte[] buffer = broadcastMessage.getBytes();
-
-        DatagramPacket packet = new DatagramPacket(buffer,buffer.length,address,3711);
-        socket.send(packet);
-        socket.close();
 
     }
 
