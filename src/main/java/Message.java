@@ -15,6 +15,39 @@ public class Message {
         this.endRange = endRange;
     }
 
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public Type getMessageType() {
+        return messageType;
+    }
+
+    public String getHashToCrack() {
+        return hashToCrack;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public String getStartRange() {
+        return startRange;
+    }
+
+    public String getEndRange() {
+        return endRange;
+    }
+
+    public Message(String message) {
+        this.teamName = message.substring(0, 32);
+        this.messageType = Type.values()[Integer.parseInt(message.substring(32, 33))];
+        this.hashToCrack = message.substring(33, 74);
+        this.length = Integer.parseInt(message.substring(74, 75));
+        this.startRange = message.substring(75, 76+length);
+        this.endRange = message.substring(76+length, 77+2*length);
+    }
+
     @Override
     public String toString() {
         return teamName + messageType.ordinal() + hashToCrack + length + startRange + endRange;
