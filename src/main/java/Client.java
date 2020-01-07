@@ -50,6 +50,7 @@ public class Client {
         System.out.println("Please enter the input string length:");
         length = sc.nextInt();
         System.out.println("please wait while we processing your request");
+        System.out.println("");
     }
 
     private void sendRequest() {
