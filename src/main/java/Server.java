@@ -17,11 +17,9 @@ public class Server {
     }
 
     public static void main(String[] args) throws IOException {
-//        Server s = new Server();
-//        s.listen();
         Server s = new Server();
-        String sol = s.tryDeHash("aaaaa", "zzzzz", "7f5bb03cf507c861269be561971108be8f37d832");
-        System.out.println(sol);
+        s.listen();
+
     }
 
     private void listen() throws IOException {

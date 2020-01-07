@@ -23,6 +23,11 @@ public class Client {
         teamName = "MatanAndOmer____________________";
         ranges = new ArrayList<>();
         servers = new ArrayList<>();
+        try {
+            clientSocket = new DatagramSocket();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
@@ -67,6 +72,7 @@ public class Client {
         byte[] receiveData = new byte[1024];
         long startTime = System.currentTimeMillis();
         while (System.currentTimeMillis() - startTime < 1000) {
+            System.out.println("entered to while");
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
             clientSocket.receive(receivePacket);
             servers.add(receivePacket.getAddress());
