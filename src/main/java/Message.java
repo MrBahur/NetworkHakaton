@@ -41,15 +41,15 @@ public class Message {
 
     public Message(String message) {
         this.teamName = message.substring(0, 32);
-        this.messageType = Type.values()[Integer.parseInt(message.substring(32, 33))];
+        this.messageType = Type.values()[(int) message.charAt(32)];
         this.hashToCrack = message.substring(33, 73);
         this.length = Integer.parseInt(message.substring(73, 74));
-        this.startRange = message.substring(74, 74+length);
-        this.endRange = message.substring(74+length, 74+2*length);
+        this.startRange = message.substring(74, 74 + length);
+        this.endRange = message.substring(74 + length, 74 + 2 * length);
     }
 
     @Override
     public String toString() {
-        return teamName + messageType.ordinal() + hashToCrack + length + startRange + endRange;
+        return teamName + (char) messageType.ordinal() + hashToCrack + length + startRange + endRange;
     }
 }
