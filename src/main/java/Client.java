@@ -2,6 +2,7 @@
 import javafx.util.Pair;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -75,19 +76,19 @@ public class Client {
     private void getRanges(int length, int numOfServers) {
         String start = getBoundary(length, 'a');
         String end = getBoundary(length, 'z');
-        int startRange = utils.convertStringToInt(start);
-        int endRange = utils.convertStringToInt(end);
-        int rangeSize = endRange - startRange;
-        int interval = (rangeSize / numOfServers);
-        startRange = 0;
-        endRange = startRange + interval;
+        BigInteger startRange = utils.convertStringToInt(start);
+        BigInteger endRange = utils.convertStringToInt(end);
+        BigInteger rangeSize = endRange.subtract(startRange);
+        BigInteger interval = (rangeSize.divide(new BigInteger(Integer.toString(numOfServers))));
+        startRange = new BigInteger("0");
+        endRange = startRange.add(interval);
         for (int i = 0; i < numOfServers; i++) {
             String from = utils.convertIntToString(startRange, length);
             String until = utils.convertIntToString(endRange, length);
             Pair<String, String> current = new Pair<>(from, until);
             ranges.add(current);
-            startRange = endRange + 1;
-            endRange = startRange + interval;
+            startRange = endRange.add(new BigInteger("1"));
+            endRange = startRange.add(interval);
         }
     }
 

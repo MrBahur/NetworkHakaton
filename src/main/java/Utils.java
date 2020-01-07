@@ -1,24 +1,28 @@
+import java.math.BigInteger;
+
 public class Utils {
 
-    public int convertStringToInt(String toConvert) {
+    public BigInteger convertStringToInt(String toConvert) {
         char[] charArray = toConvert.toCharArray();
-        int num = 0;
+        BigInteger num = new BigInteger("0");
         for (char c : charArray) {
             if (c < 'a' || c > 'z') {
                 throw new RuntimeException();
             }
-            num *= 26;
-            num += c - 'a';
+            num = num.multiply(new BigInteger("26"));
+            int x = c - 'a';
+            num = num.add(new BigInteger(Integer.toString(x)));
         }
         return num;
     }
 
-    public String convertIntToString(int toConvert, int length) {
+    public String convertIntToString(BigInteger toConvert, int length) {
         StringBuilder s = new StringBuilder(length);
-        while (toConvert > 0) {
-            int c = toConvert % 26;
-            s.insert(0, (char) (c + 'a'));
-            toConvert /= 26;
+
+        while (toConvert.compareTo(new BigInteger("0")) > 0) {
+            BigInteger c = toConvert.mod(new BigInteger("26"));
+            s.insert(0, (char) (c.intValue() + 'a'));
+            toConvert = toConvert.divide(new BigInteger("26"));
             length--;
         }
         while (length > 0) {

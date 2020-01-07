@@ -17,9 +17,11 @@ public class Server {
     }
 
     public static void main(String[] args) throws IOException {
+//        Server s = new Server();
+//        s.listen();
         Server s = new Server();
-        s.listen();
-
+        String sol = s.tryDeHash("aaaaa", "zzzzz", "7f5bb03cf507c861269be561971108be8f37d832");
+        System.out.println(sol);
     }
 
     private void listen() throws IOException {
@@ -34,22 +36,20 @@ public class Server {
             InetAddress address = receivePacket.getAddress();
             int port = receivePacket.getPort();
             if (received.getMessageType() == Type.DISCOVER) {
-                sendOffer(address,port,received);
-            }
-            else if (received.getMessageType() == Type.REQUEST) {
+                sendOffer(address, port, received);
+            } else if (received.getMessageType() == Type.REQUEST) {
                 sendAnswer(address, port, received);
             }
         }
     }
 
     private void sendAnswer(InetAddress address, int port, Message received) throws IOException {
-        String answer =  tryDeHash(received.getStartRange(), received.getEndRange(), received.getHashToCrack());
+        String answer = tryDeHash(received.getStartRange(), received.getEndRange(), received.getHashToCrack());
         if (answer != null) {
             //todo need to make string answer length == 40 chars
             Message toSend = new Message(teamName, Type.ACK, answer, received.getLength(), received.getStartRange(), received.getEndRange());
             send(toSend, address, port);
-        }
-        else {
+        } else {
             Message toSend = new Message(teamName, Type.NACK, received.getHashToCrack(), received.getLength(), received.getStartRange(), received.getEndRange());
             send(toSend, address, port);
         }
@@ -68,7 +68,6 @@ public class Server {
     }
 
 
-
     private String hash(String toHash) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -85,10 +84,10 @@ public class Server {
     }
 
     private String tryDeHash(String startRange, String endRange, String originalHash) {
-        int start = utils.convertStringToInt(startRange);
-        int end = utils.convertStringToInt(endRange);
+        BigInteger start = utils.convertStringToInt(startRange);
+        BigInteger end = utils.convertStringToInt(endRange);
         int length = startRange.length();
-        for (int i = start; i <= end; i++) {
+        for (BigInteger i = start; i.compareTo(end) <= 0; i = i.add(new BigInteger("1"))) {
             String currentString = utils.convertIntToString(i, length);
             String hash = hash(currentString);
             if (originalHash.equals(hash)) {
