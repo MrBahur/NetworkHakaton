@@ -36,17 +36,17 @@ public class Server {
             if (received.getMessageType() == Type.DISCOVER) {
                 sendOffer(address, port, received);
             } else if (received.getMessageType() == Type.REQUEST) {
-                sendAnswer(address, port, received);
-            }else{
+                Thread t = new Thread(() -> sendAnswer(address, port, received));
+                t.start();
+            } else {
                 System.out.println(received.toString());
             }
         }
     }
 
-    private void sendAnswer(InetAddress address, int port, Message received) throws IOException {
+    private void sendAnswer(InetAddress address, int port, Message received) {
         String answer = tryDeHash(received.getStartRange(), received.getEndRange(), received.getHashToCrack());
         if (answer != null) {
-            //todo need to make string answer length == 40 chars
             Message toSend = new Message(teamName, Type.ACK, answer, received.getLength(), received.getStartRange(), received.getEndRange());
             send(toSend, address, port);
         } else {
@@ -55,15 +55,19 @@ public class Server {
         }
     }
 
-    private void sendOffer(InetAddress address, int port, Message received) throws IOException {
+    private void sendOffer(InetAddress address, int port, Message received) {
         Message toSend = new Message(teamName, Type.OFFER, received.getHashToCrack(), received.getLength(), received.getStartRange(), received.getEndRange());
         send(toSend, address, port);
     }
 
-    private void send(Message m, InetAddress address, int port) throws IOException {
+    private void send(Message m, InetAddress address, int port) {
         byte[] buffer = m.toString().getBytes();
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
-        serverSocket.send(packet);
+        try {
+            serverSocket.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         System.out.println("message sent: " + m.toString());
     }
 
