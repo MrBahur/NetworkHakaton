@@ -72,10 +72,15 @@ public class Client {
         byte[] receiveData = new byte[1024];
         long startTime = System.currentTimeMillis();
         while (System.currentTimeMillis() - startTime < 1000) {
-            System.out.println("entered to while");
+            System.out.println(75);
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+            System.out.println(77);
             clientSocket.receive(receivePacket);
+            System.out.println(79);
             servers.add(receivePacket.getAddress());
+            String sentence = new String(receivePacket.getData());
+            Message m = new Message(sentence);
+            System.out.println(m.toString());
         }
     }
 

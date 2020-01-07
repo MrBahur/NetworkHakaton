@@ -64,8 +64,9 @@ public class Server {
         byte[] buffer = m.toString().getBytes();
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
         try {
+            Thread.sleep(1000);
             serverSocket.send(packet);
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         System.out.println("message sent: " + m.toString());
