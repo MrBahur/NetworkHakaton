@@ -30,23 +30,44 @@ public class Server {
             String sentence = new String(receivePacket.getData());
             System.out.println("message received: " + sentence);
             //move to different thread
-            Message recieved = new Message(sentence);
-
+            Message received = new Message(sentence);
             InetAddress address = receivePacket.getAddress();
             int port = receivePacket.getPort();
-            sendOffer(address,port,recieved);
+            if (received.getMessageType() == Type.DISCOVER) {
+                sendOffer(address,port,received);
+            }
+            else if (received.getMessageType() == Type.REQUEST) {
+                sendAnswer(address, port, received);
+            }
+        }
+    }
 
+    private void sendAnswer(InetAddress address, int port, Message received) throws IOException {
+        String answer =  tryDeHash(received.getStartRange(), received.getEndRange(), received.getHashToCrack());
+        if (answer != null) {
+            //todo need to make string answer length == 40 chars
+            Message toSend = new Message(teamName, Type.ACK, answer, received.getLength(), received.getStartRange(), received.getEndRange());
+            send(toSend, address, port);
+        }
+        else {
+            Message toSend = new Message(teamName, Type.NACK, received.getHashToCrack(), received.getLength(), received.getStartRange(), received.getEndRange());
+            send(toSend, address, port);
         }
     }
 
     private void sendOffer(InetAddress address, int port, Message received) throws IOException {
         Message toSend = new Message(teamName, Type.OFFER, received.getHashToCrack(), received.getLength(), received.getStartRange(), received.getEndRange());
-        byte[] buffer = toSend.toString().getBytes();
+        send(toSend, address, port);
+    }
+
+    private void send(Message m, InetAddress address, int port) throws IOException {
+        byte[] buffer = m.toString().getBytes();
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
         serverSocket.send(packet);
-        System.out.println("message sent: " + toSend.toString());
-
+        System.out.println("message sent: " + m.toString());
     }
+
+
 
     private String hash(String toHash) {
         try {
@@ -76,6 +97,5 @@ public class Server {
         }
         return null;
     }
-
 
 }

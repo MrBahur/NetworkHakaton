@@ -13,12 +13,15 @@ public class Client {
     private int length;
     private String teamName;
     private ArrayList<Pair<String, String>> ranges;
+    private ArrayList<InetAddress> servers;
+    private DatagramSocket clientSocket;
 
 
     public Client() {
         utils = new Utils();
         teamName = "MatanAndOmer____________________";
         ranges = new ArrayList<>();
+        servers = new ArrayList<>();
     }
 
     public static void main(String[] args) {
@@ -43,20 +46,31 @@ public class Client {
         System.out.println("please wait while we processing your request");
     }
 
+    private void sendRequest() {
+
+    }
+
     private void sendDiscover() throws IOException {
         Message m = new Message(teamName, Type.DISCOVER, input, length, getBoundary(length, 'a'), getBoundary(length, 'z'));
         InetAddress address = InetAddress.getByName("255.255.255.255");
         DatagramSocket socket = new DatagramSocket();
         socket.setBroadcast(true);
-
         byte[] buffer = m.toString().getBytes();
-
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 3117);
         socket.send(packet);
+        listen();
         socket.close();
-
     }
 
+    private void listen() throws IOException {
+        byte[] receiveData = new byte[1024];
+        long startTime = System.currentTimeMillis();
+        while (System.currentTimeMillis() - startTime < 1000) {
+            DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+            clientSocket.receive(receivePacket);
+            servers.add(receivePacket.getAddress());
+        }
+    }
 
     private void getRanges(int length, int numOfServers) {
         String start = getBoundary(length, 'a');
