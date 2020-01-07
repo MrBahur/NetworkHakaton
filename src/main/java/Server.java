@@ -33,7 +33,11 @@ public class Server {
             Message received;
             try {
                 received = new Message(sentence);
-            }catch (Exception e){
+            } catch (Exception e) {
+                byte[] buffer = "We are the Trollz, fix your message its broken".getBytes();
+                DatagramPacket packet = new DatagramPacket(buffer, buffer.length, receivePacket.getAddress(), receivePacket.getPort());
+                serverSocket.send(packet);
+                System.out.println("Message sent: " + new String(packet.getData()));
                 continue;
             }
             InetAddress address = receivePacket.getAddress();
