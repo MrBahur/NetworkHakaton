@@ -30,7 +30,12 @@ public class Server {
             String sentence = new String(receivePacket.getData());
             System.out.println("message received: " + sentence);
             //move to different thread
-            Message received = new Message(sentence);
+            Message received;
+            try {
+                received = new Message(sentence);
+            }catch (Exception e){
+                continue;
+            }
             InetAddress address = receivePacket.getAddress();
             int port = receivePacket.getPort();
             if (received.getMessageType() == Type.DISCOVER) {
