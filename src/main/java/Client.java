@@ -41,9 +41,8 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        client.getRanges(6, 2);
+        client.clientSocket.close();
         System.out.println("Done");
-
     }
 
 
@@ -115,11 +114,13 @@ public class Client {
             Message m = new Message(new String(receivePacket.getData()));
             if (m.getMessageType() == Type.ACK) {
                 System.out.println("Your answer is: " + m.getStartRange());
+                return;
             }
             else if (m.getMessageType() == Type.NACK) {
                 nackCounter++;
                 if (nackCounter == servers.size()) {
                     System.out.println("Sorry we could not find an answer for you");
+                    return;
                 }
             }
         }
