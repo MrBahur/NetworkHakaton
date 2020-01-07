@@ -52,7 +52,7 @@ public class Server {
     private void sendAnswer(InetAddress address, int port, Message received) {
         String answer = tryDeHash(received.getStartRange(), received.getEndRange(), received.getHashToCrack());
         if (answer != null) {
-            Message toSend = new Message(teamName, Type.ACK, answer, received.getLength(), received.getStartRange(), received.getEndRange());
+            Message toSend = new Message(teamName, Type.ACK, received.getHashToCrack(), received.getLength(), answer, received.getEndRange());
             send(toSend, address, port);
         } else {
             Message toSend = new Message(teamName, Type.NACK, received.getHashToCrack(), received.getLength(), received.getStartRange(), received.getEndRange());

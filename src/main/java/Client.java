@@ -35,7 +35,9 @@ public class Client {
         client.getInput();
         try {
             client.sendDiscover();
-            client.listen();
+            client.listenToOffers();
+            client.sendAllRequests();
+            client.listenToAcks();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -43,6 +45,7 @@ public class Client {
         System.out.println("Done");
 
     }
+
 
     private void getInput() {
         Scanner sc = new Scanner(System.in);
@@ -54,9 +57,25 @@ public class Client {
         System.out.println("");
     }
 
-    private void sendRequest() {
-
+    private void sendAllRequests() {
+        getRanges(length, servers.size());
+        for (int i = 0; i < servers.size(); i++) {
+            sendRequest(servers.get(i), ranges.get(i));
+        }
     }
+
+    private void sendRequest(InetAddress address, Pair<String, String> range)   {
+        Message m = new Message(teamName, Type.REQUEST, input, length, range.getKey(), range.getValue());
+        byte[] buffer = m.toString().getBytes();
+        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 3117);
+        try {
+            clientSocket.send(packet);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void sendDiscover() throws IOException {
         Message m = new Message(teamName, Type.DISCOVER, input, length, getBoundary(length, 'a'), getBoundary(length, 'z'));
@@ -67,10 +86,10 @@ public class Client {
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 3117);
         socket.send(packet);
         socket.setBroadcast(false);
-        
+
     }
 
-    private void listen() throws IOException {
+    private void listenToOffers() throws IOException {
         byte[] receiveData = new byte[1024];
         long startTime = System.currentTimeMillis();
         while (System.currentTimeMillis() - startTime < 1000) {
@@ -83,6 +102,26 @@ public class Client {
             String sentence = new String(receivePacket.getData());
             Message m = new Message(sentence);
             System.out.println(m.toString());
+        }
+    }
+
+    private void listenToAcks() throws IOException {
+        int nackCounter = 0;
+        byte[] receiveData = new byte[1024];
+        long startTime = System.currentTimeMillis();
+        while (System.currentTimeMillis() - startTime < 60000) {
+            DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+            clientSocket.receive(receivePacket);
+            Message m = new Message(receivePacket.toString());
+            if (m.getMessageType() == Type.ACK) {
+                System.out.println("Your answer is: " + m.getStartRange());
+            }
+            else if (m.getMessageType() == Type.NACK) {
+                nackCounter++;
+                if (nackCounter == servers.size()) {
+                    System.out.println("Sorry we could not find an answer for you");
+                }
+            }
         }
     }
 
