@@ -37,6 +37,8 @@ public class Server {
                 sendOffer(address, port, received);
             } else if (received.getMessageType() == Type.REQUEST) {
                 sendAnswer(address, port, received);
+            }else{
+                System.out.println(received.toString());
             }
         }
     }
