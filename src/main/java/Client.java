@@ -112,7 +112,7 @@ public class Client {
         while (System.currentTimeMillis() - startTime < 60000) {
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
             clientSocket.receive(receivePacket);
-            Message m = new Message(receivePacket.toString());
+            Message m = new Message(new String(receivePacket.getData()));
             if (m.getMessageType() == Type.ACK) {
                 System.out.println("Your answer is: " + m.getStartRange());
             }
