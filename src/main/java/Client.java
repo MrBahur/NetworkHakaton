@@ -24,7 +24,7 @@ public class Client {
         ranges = new ArrayList<>();
         servers = new ArrayList<>();
         try {
-            clientSocket = new DatagramSocket();
+            clientSocket = new DatagramSocket(4567);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,11 +61,13 @@ public class Client {
     private void sendDiscover() throws IOException {
         Message m = new Message(teamName, Type.DISCOVER, input, length, getBoundary(length, 'a'), getBoundary(length, 'z'));
         InetAddress address = InetAddress.getByName("255.255.255.255");
-        DatagramSocket socket = new DatagramSocket();
+        DatagramSocket socket = clientSocket;
         socket.setBroadcast(true);
         byte[] buffer = m.toString().getBytes();
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 3117);
         socket.send(packet);
+        socket.setBroadcast(false);
+        
     }
 
     private void listen() throws IOException {
