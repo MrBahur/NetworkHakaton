@@ -35,6 +35,7 @@ public class Client {
         client.getInput();
         try {
             client.sendDiscover();
+            client.listen();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,8 +66,6 @@ public class Client {
         byte[] buffer = m.toString().getBytes();
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 3117);
         socket.send(packet);
-        listen();
-        socket.close();
     }
 
     private void listen() throws IOException {
