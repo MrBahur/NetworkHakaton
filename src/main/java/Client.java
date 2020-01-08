@@ -17,10 +17,9 @@ public class Client {
     private ArrayList<InetAddress> servers;
     private DatagramSocket clientSocket;
 
-
     public Client() {
         utils = new Utils();
-        teamName = "MatanAndOmer____________________";
+        teamName = "WeAreTheRealTrolls______________";
         ranges = new ArrayList<>();
         servers = new ArrayList<>();
         try {
@@ -45,7 +44,6 @@ public class Client {
         System.out.println("Done");
     }
 
-
     private void getInput() {
         Scanner sc = new Scanner(System.in);
         System.out.println("Welcome to " + teamName + ". Please enter the hash:");
@@ -69,8 +67,7 @@ public class Client {
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 3117);
         try {
             clientSocket.send(packet);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -85,18 +82,14 @@ public class Client {
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 3117);
         socket.send(packet);
         socket.setBroadcast(false);
-
     }
 
     private void listenToOffers() throws IOException {
         byte[] receiveData = new byte[1024];
         long startTime = System.currentTimeMillis();
         while (System.currentTimeMillis() - startTime < 1000) {
-            System.out.println(75);
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-            System.out.println(77);
             clientSocket.receive(receivePacket);
-            System.out.println(79);
             servers.add(receivePacket.getAddress());
             String sentence = new String(receivePacket.getData());
             Message m = new Message(sentence);
